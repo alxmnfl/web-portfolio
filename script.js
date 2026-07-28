@@ -1,3 +1,45 @@
+/* Theme toggle */
+
+const themeToggle = document.getElementById('themeToggle');
+const htmlEl = document.documentElement;
+
+function getSystemTheme() {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function getStoredTheme() {
+    return localStorage.getItem('theme');
+}
+
+function applyTheme(theme) {
+    const resolvedTheme = theme === 'system' ? getSystemTheme() : theme;
+    htmlEl.setAttribute('data-theme', resolvedTheme);
+    localStorage.setItem('theme', theme);
+}
+
+function getCurrentTheme() {
+    return getStoredTheme() || 'system';
+}
+
+if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+        const current = getCurrentTheme();
+        if (current === 'dark' || current === 'system') {
+            applyTheme('light');
+        } else {
+            applyTheme('dark');
+        }
+    });
+
+    applyTheme(getCurrentTheme());
+}
+
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (getStoredTheme() === 'system') {
+        applyTheme('system');
+    }
+});
+
 /* Typing animation in hero section */
 
 const typed = new Typed("#typed", {
